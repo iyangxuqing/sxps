@@ -1,0 +1,34 @@
+<import src='/template/loading/loading.wxml' />
+<template is="loading" data="{{...loading}}" />
+<import src='/template/toptip/toptip.wxml' />
+<template is="toptip" data="{{...toptip}}" />
+<import src='/template/userinfo/userinfo.wxml' />
+<import src='/template/mobile/mobile.wxml' />
+
+<view class="container" wx:if="{{ready}}">
+  <template is="userInfo" data="{{...userInfo}}" />
+  <template is="mobile" data="{{...mobile}}" />
+  <template is="sellerInfo" data="{{...sellerInfo}}" />
+</view>
+
+<template name="sellerInfo">
+  <view class="card sellerInfo">
+    <view class="card-head">
+      <view class="card-head-title">铱星生鲜</view>
+    </view>
+    <view class="card-body">
+      <view class="shop">
+        <view class="shop-image">
+          <image src="{{logo}}" mode="aspectFill" />
+        </view>
+        <view class="shop-info">
+          <view class="shop-info-title">{{title}}</view>
+          <view class="shop-info-tele" data-phone-number="{{phone}}" catchtap="onShopTeleTap">
+            <view class="shop-info-label">联系电话:</view>
+            <view class="shop-info-value">{{phone}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

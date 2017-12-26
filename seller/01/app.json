@@ -1,0 +1,51 @@
+{
+  "pages": [
+    "pages/seller/items/index",
+    "pages/seller/trades/index",
+    "pages/seller/trades_summary/index",
+    "pages/seller/wode/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#09bb08",
+    "backgroundColor": "#f0f0f0",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/seller/items/index",
+        "text": "商品",
+        "iconPath": "images/tab/01/admin.png",
+        "selectedIconPath": "images/tab/02/admin.png"
+      },
+      {
+        "pagePath": "pages/seller/trades_summary/index",
+        "text": "采购",
+        "iconPath": "images/tab/01/cart.png",
+        "selectedIconPath": "images/tab/02/cart.png"
+      },
+      {
+        "pagePath": "pages/seller/trades/index",
+        "text": "订单",
+        "iconPath": "images/tab/01/admin.png",
+        "selectedIconPath": "images/tab/02/admin.png"
+      },
+      {
+        "pagePath": "pages/seller/wode/index",
+        "text": "我的",
+        "iconPath": "images/tab/01/user.png",
+        "selectedIconPath": "images/tab/02/user.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 20000,
+    "connectSocket": 20000,
+    "uploadFile": 20000,
+    "downloadFile": 20000
+  }
+}
