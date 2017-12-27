@@ -1,7 +1,7 @@
-<import src='/template/loading/loading.wxml' />
-<template is="loading" data="{{...loading}}" />
 <import src='/template/toptip/toptip.wxml' />
 <template is="toptip" data="{{...toptip}}" />
+<import src='/template/netfail/netfail.wxml' />
+<template is="netfail" data="{{...netfail}}" />
 <import src='/template/userinfo/userinfo.wxml' />
 <import src='/template/mobile/mobile.wxml' />
 

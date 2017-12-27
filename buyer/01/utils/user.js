@@ -1,20 +1,17 @@
 import { http } from 'http.js'
 
-function login() {
+function login(options) {
   return new Promise(function (resolve, reject) {
     wx.login({
       success: function (res) {
         http.post({
           url: 'sxps_buyer/user.php?m=login',
-          data: { code: res.code }
+          data: { code: res.code },
+          silent: options.silent
         }).then(function (res) {
-          if (res.errno === 0) {
-            wx.setStorageSync('token', res.token)
-            wx.setStorageSync('user', res.user)
-            resolve()
-          } else {
-            reject(res)
-          }
+          wx.setStorageSync('token', res.token)
+          wx.setStorageSync('user', res.user)
+          resolve()
         })
       },
       fail: function (res) {
@@ -34,12 +31,8 @@ function getUser(options = {}) {
         url: 'sxps_buyer/user.php?m=get',
         data: options
       }).then(function (res) {
-        if (res.errno === 0) {
-          wx.setStorageSync('user', res.user)
-          resolve(res.user)
-        } else {
-          reject(res.user)
-        }
+        wx.setStorageSync('user', res.user)
+        resolve(res.user)
       }).catch(function (res) {
         reject(res)
       })
@@ -53,14 +46,10 @@ function setUser(options) {
       url: 'sxps_buyer/user.php?m=set',
       data: options
     }).then(function (res) {
-      if (res.errno === 0) {
-        let user = wx.getStorageSync('user')
-        user = Object.assign({}, user, options)
-        wx.setStorageSync('user', user)
-        resolve(res)
-      } else {
-        reject(res)
-      }
+      let user = wx.getStorageSync('user')
+      user = Object.assign({}, user, options)
+      wx.setStorageSync('user', user)
+      resolve(res)
     }).catch(function (res) {
       reject(res)
     })
@@ -76,13 +65,9 @@ function mobileCodeRequest(mobile) {
         mobile: mobile
       }
     }).then(function (res) {
-      if (res.errno === 0) {
-        let user = wx.getStorageSync('user')
-        user.mobileNumber = mobile
-        wx.setStorageSync('user', user)
-      } else {
-        reject(res)
-      }
+      let user = wx.getStorageSync('user')
+      user.mobileNumber = mobile
+      wx.setStorageSync('user', user)
     }).catch(function (res) {
       reject(res)
     })

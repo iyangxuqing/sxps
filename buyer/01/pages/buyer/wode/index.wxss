@@ -1,4 +1,3 @@
-@import '/template/loading/loading.wxss';
 @import '/template/toptip/toptip.wxss';
 @import '/template/userinfo/userinfo.wxss';
 @import '/template/mobile/mobile.wxss';

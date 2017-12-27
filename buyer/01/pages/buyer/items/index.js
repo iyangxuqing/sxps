@@ -88,7 +88,17 @@ Page({
     })
   },
 
-  loadData: function (options = {}) {
+  onNetFailRetry: function (e) {
+    let id = e.currentTarget.dataset.id
+    if (id == 1001) {
+      this.setData({
+        'netfail.show': false,
+      })
+      this.loadData()
+    }
+  },
+
+  loadData: function (options) {
     Promise.all([
       Cate.getCates(options),
       Item.getItems(options),
@@ -99,7 +109,11 @@ Page({
       let cid = this.cates.getActiveCId()
       this.items.update(items, { cid })
       this.setData({ ready: true })
-      options.success && options.success()
+    }.bind(this)).catch(function (res) {
+      this.setData({
+        'netfail.id': 1001,
+        'netfail.show': true,
+      })
     }.bind(this))
   },
 
@@ -134,16 +148,11 @@ Page({
   },
 
   onPullDownRefresh: function () {
-    this.loadData({
-      nocache: true,
-      success: function (res) {
-        wx.stopPullDownRefresh()
-      }.bind(this)
-    })
+
   },
 
   onReachBottom: function () {
 
-  },
+  }
 
 })

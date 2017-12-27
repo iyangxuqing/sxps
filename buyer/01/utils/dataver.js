@@ -4,6 +4,7 @@ function getDataver(options = {}) {
   return new Promise(function (resolve, reject) {
     http.get({
       url: 'sxps_buyer/dataver.php?m=get',
+      silent: options.silent,
     }).then(function (res) {
       let dataver = wx.getStorageSync('dataver') || {}
       for (let i in res.dataver) {

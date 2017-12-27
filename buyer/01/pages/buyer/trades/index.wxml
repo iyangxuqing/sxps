@@ -1,5 +1,7 @@
 <import src="/template/topnavs/topnavs.wxml" />
 <import src="/template/empty/empty.wxml" />
+<import src="/template/netfail/netfail.wxml" />
+<template is="netfail" data="{{...netfail}}" />
 
 <view class="container withTopnavs" wx:if="{{ready}}">
 

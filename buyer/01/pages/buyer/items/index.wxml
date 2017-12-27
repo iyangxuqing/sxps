@@ -2,6 +2,8 @@
 <import src="/template/items/items.wxml" />
 <import src="/template/purchase/purchase.wxml" />
 <import src="/template/empty/empty.wxml" />
+<import src="/template/netfail/netfail.wxml" />
+<template is="netfail" data="{{...netfail}}" />
 
 <view class="container" wx:if="{{ready}}">
 

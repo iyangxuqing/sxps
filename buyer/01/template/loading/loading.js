@@ -11,7 +11,7 @@ export class Loading {
         'loading.show': true,
         'loading.mask': options.mask,
       })
-    }, 500)
+    }, 300)
   }
 
   hide() {

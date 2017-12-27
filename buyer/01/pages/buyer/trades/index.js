@@ -38,6 +38,16 @@ Page({
     this.loadData({ nocache: true })
   },
 
+  onNetFailRetry: function (e) {
+    let id = e.currentTarget.dataset.id
+    if (id == 1002) {
+      this.setData({
+        'netfail.show': false,
+      })
+      this.loadData()
+    }
+  },
+
   loadData: function (options = {}) {
     Trade.getTrades_buyer(options).then(function (trades) {
       let status = this.topnavs.getActiveItem().status
@@ -51,7 +61,11 @@ Page({
         trades: _trades,
         ready: true
       })
-      options.success && options.success()
+    }.bind(this)).catch(function (res) {
+      this.setData({
+        'netfail.id': 1002,
+        'netfail.show': true
+      })
     }.bind(this))
   },
 
@@ -95,19 +109,10 @@ Page({
   },
 
   onPullDownRefresh: function () {
-    this.loadData({
-      nocache: true,
-      success: function () {
-        wx.stopPullDownRefresh()
-      }
-    })
+
   },
 
   onReachBottom: function () {
-
-  },
-
-  onShareAppMessage: function () {
 
   }
 })

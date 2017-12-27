@@ -40,7 +40,7 @@
         </view>
 
         <view class="purchase-item-message">
-          <input value="{{item.message}}" placeholder="买家留言..." cursor-spacing="20" maxlength="32" bindinput="{{onPurchaseMessageInput}}" />
+          <input value="{{item.message}}" placeholder="买家留言" cursor-spacing="20" maxlength="32" bindinput="{{onPurchaseMessageInput}}" />
         </view>
 
         <view class="purchase-item-buttons">

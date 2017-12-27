@@ -1,7 +1,13 @@
 let config = require('config.js')
 
+let requestNum = 0
+
 function get(options) {
   return new Promise(function (resolve, reject) {
+    if (!options.silent) {
+      requestNum++
+      if (requestNum == 1) wx.showNavigationBarLoading()
+    }
     wx.request({
       url: config.apiUrl + options.url,
       header: {
@@ -19,7 +25,14 @@ function get(options) {
         }
       },
       fail: function (res) {
+        getApp().listener.trigger('netfail', options.url)
         reject(res)
+      },
+      complete: function (res) {
+        if (!options.silent) {
+          requestNum--
+          if (requestNum == 0) wx.hideNavigationBarLoading()
+        }
       }
     })
   })
@@ -27,6 +40,10 @@ function get(options) {
 
 function post(options) {
   return new Promise(function (resolve, reject) {
+    if (!options.silent) {
+      requestNum++
+      if (requestNum == 1) wx.showNavigationBarLoading()
+    }
     wx.request({
       url: config.apiUrl + options.url,
       method: 'POST',
@@ -46,6 +63,12 @@ function post(options) {
       },
       fail: function (res) {
         reject(res)
+      },
+      complete: function (res) {
+        if (!options.silent) {
+          requestNum--
+          if (requestNum == 0) wx.hideNavigationBarLoading()
+        }
       }
     })
   })
@@ -64,43 +87,44 @@ function cosUpload(options) {
     let target = config.aid + '/' + options.target + '.' + extension
     http.get({
       url: 'sxps_buyer/cos.php?m=signature',
-      data: { filename: target }
+      data: { filename: target },
+      silent: options.silent,
     }).then(function (res) {
-      if (res.errno === 0) {
-        let url = res.url
-        let sign = res.multi_signature
-        wx.uploadFile({
-          url: url,
-          name: 'filecontent',
-          filePath: source,
-          header: {
-            Authorization: sign,
-          },
-          formData: {
-            op: 'upload',
-            insertOnly: 0,
-          },
-          success: function (res) {
-            if (res.statusCode == 200) {
-              let data = JSON.parse(res.data)
-              if (data.message && data.message == 'SUCCESS') {
-                let url = config.youImageHost + target
-                resolve({
-                  url,
-                  target,
-                  errno: 0,
-                  error: '',
-                })
-              } else {
-                reject(res)
-              }
+      let url = res.url
+      let sign = res.multi_signature
+      if (!options.silent) wx.showNavigationBarLoading()
+      wx.uploadFile({
+        url: url,
+        name: 'filecontent',
+        filePath: source,
+        header: { Authorization: sign },
+        formData: {
+          op: 'upload',
+          insertOnly: 0,
+        },
+        success: function (res) {
+          if (res.statusCode == 200) {
+            let data = JSON.parse(res.data)
+            if (data.message && data.message == 'SUCCESS') {
+              let url = config.youImageHost + target
+              resolve({
+                url,
+                target,
+                errno: 0,
+                error: '',
+              })
+            } else {
+              reject(res)
             }
-          },
-          fail: function (res) {
-            reject(res)
           }
-        })
-      }
+        },
+        fail: function (res) {
+          reject(res)
+        },
+        complete: function (res) {
+          // wx.hideNavigationBarLoading()
+        }
+      })
     })
   })
 }
@@ -114,17 +138,15 @@ function cosDelete(options) {
   return new Promise(function (resolve, reject) {
     http.get({
       url: 'sxps_buyer/cos.php?m=signature',
-      data: {
-        filename: options.filename
-      }
+      data: { filename: options.filename },
+      silent: options.silent,
     }).then(function (res) {
       let url = res.url
       let sign = res.once_signature
+      if (!options.silent) wx.showNavigationBarLoading()
       wx.request({
         url: url,
-        header: {
-          'Authorization': sign,
-        },
+        header: { 'Authorization': sign },
         method: 'POST',
         data: { op: "delete" },
         success: function (res) {
@@ -135,6 +157,12 @@ function cosDelete(options) {
             }
           }
         },
+        fail: function (res) {
+          reject(res)
+        },
+        complete: function (res) {
+          // wx.hideNavigationBarLoading()
+        }
       })
     })
   })
@@ -147,21 +175,13 @@ function chooseImage() {
       sizeType: ['compressed'],
       success: function (res) {
         let tempFilePath = res.tempFilePaths[0]
-        wx.showNavigationBarLoading()
         http.cosUpload({
           source: tempFilePath,
           target: Date.now()
         }).then(function (res) {
-          if (res.errno === 0) {
-            resolve(res.url)
-            wx.hideNavigationBarLoading()
-          } else {
-            reject(res)
-            wx.hideNavigationBarLoading()
-          }
+          resolve(res.url)
         }).catch(function (res) {
           reject(res)
-          wx.hideNavigationBarLoading()
         })
       },
     })

@@ -5,7 +5,7 @@ import { Dataver } from 'utils/dataver.js'
 import { Listener } from 'utils/listener.js'
 
 App({
-  
+
   onLaunch: function () {
     this.init()
   },
@@ -15,10 +15,8 @@ App({
     this.youImageMode = config.youImageMode
     this.youImageMode_v2 = config.youImageMode_v2
     this.youImageMode_v5 = config.youImageMode_v5
-
-    User.login()
-    Dataver.get()
-
+    User.login({ silent: true })
+    Dataver.get({ silent: true })
   }
 
 })

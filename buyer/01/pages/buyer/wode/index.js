@@ -1,4 +1,3 @@
-import { Loading } from '../../../template/loading/loading.js'
 import { Toptip } from '../../../template/toptip/toptip.js'
 import { Mobile } from '../../../template/mobile/mobile.js'
 import { User } from '../../../utils/user.js'
@@ -76,14 +75,17 @@ Page({
     })
   },
 
-  onLoad: function (options) {
-    this.loading = new Loading()
-    this.toptip = new Toptip()
-    this.mobile = new Mobile()
-    app.listener.on('toptip', this.onToptip)
-    app.listener.on('userUpdate', this.onUserUpdate)
+  onNetFailRetry: function (e) {
+    let id = e.currentTarget.dataset.id
+    if (id == 1003) {
+      this.setData({
+        'netfail.show': false,
+      })
+      this.loadData()
+    }
+  },
 
-    this.loading.show()
+  loadData: function (options) {
     User.getUser().then(function (user) {
       this.setData({
         'ready': true,
@@ -98,11 +100,20 @@ Page({
         'mobile.number': user.mobileNumber,
         'mobile.verified': user.mobileVerified == '1',
       })
-      this.loading.hide()
     }.bind(this)).catch(function (res) {
-      this.loading.hide()
+      this.setData({
+        'netfail.id': 1003,
+        'netfail.show': true,
+      })
     }.bind(this))
+  },
 
+  onLoad: function (options) {
+    this.toptip = new Toptip()
+    this.mobile = new Mobile()
+    app.listener.on('toptip', this.onToptip)
+    app.listener.on('userUpdate', this.onUserUpdate)
+    this.loadData()
   },
 
   onReady: function () {
