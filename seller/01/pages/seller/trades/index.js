@@ -69,7 +69,7 @@ Page({
   onOrderUpdated: function (order) {
     let id = order.id
     let tid = order.tid
-    Trade.setTrades_seller_v4({
+    Trade.setTrades_seller({
       oid: id,
       realNum: order.realNum
     }).then(function (res) {

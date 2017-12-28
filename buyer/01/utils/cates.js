@@ -11,7 +11,7 @@ function getCates(options = {}) {
       resolve(cates)
     } else {
       http.get({
-        url: 'sxps_buyer/cate2.php?m=get',
+        url: 'sxps_buyer/cate.php?m=get',
       }).then(function (res) {
         let cates = transformCates(res.cates)
         wx.setStorageSync('cates', cates)

@@ -2,7 +2,12 @@
 @import '/template/items/items.wxss';
 @import '/template/purchase/purchase.wxss';
 
+page {
+  height: 100%;
+}
+
 .container {
+  height: 100%;
   padding-top: 302rpx;
 }
 

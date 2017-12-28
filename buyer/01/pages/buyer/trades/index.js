@@ -59,6 +59,7 @@ Page({
       }
       this.setData({
         trades: _trades,
+        tradesScrollTop: 0,
         ready: true
       })
     }.bind(this)).catch(function (res) {

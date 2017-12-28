@@ -3,11 +3,11 @@
 <import src="/template/netfail/netfail.wxml" />
 <template is="netfail" data="{{...netfail}}" />
 
-<view class="container withTopnavs" wx:if="{{ready}}">
+<view class="container" wx:if="{{ready}}">
 
   <template is="topnavs" data="{{...topnavs}}" />
 
-  <view class="trades">
+  <scroll-view class="trades" scroll-y="{{true}}" scroll-top="{{tradesScrollTop}}">
     <block wx:for="{{trades}}" wx:key="" wx:for-item="trade">
       <view class="trade">
         <view class="trade-info">
@@ -53,7 +53,7 @@
         </view>
       </view>
     </block>
-  </view>
+  </scroll-view>
 
   <template is="empty" data="{{show: !trades.length, message: '暂时没有订单'}}" />
 

@@ -83,6 +83,7 @@ export class Items {
     }
     page.setData({
       'items.items': _items,
+      'items.scrollTop': 0,
     })
   }
 

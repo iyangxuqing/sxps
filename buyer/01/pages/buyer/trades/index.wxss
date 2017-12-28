@@ -1,27 +1,27 @@
 @import '/template/topnavs/topnavs.wxss';
 @import '/template/empty/empty.wxss';
 
+page {
+  height: 100%;
+}
+
 .container {
+  height: 100%;
+  padding-top: 90rpx;
   padding-left: 30rpx;
   padding-right: 30rpx;
 }
 
-.container.withTopnavs {
-  padding-top: 90rpx;
-}
-
-.trades {
+scroll-view.trades {
+  height: 100%;
   padding-top: 30rpx;
   padding-bottom: 30rpx;
+  box-sizing: border-box;
 }
 
 .trade {
   font-size: 30rpx;
   color: #333;
-}
-
-.gray {
-  color: #888;
 }
 
 .trade + .trade {

@@ -92,7 +92,10 @@ function cosUpload(options) {
     }).then(function (res) {
       let url = res.url
       let sign = res.multi_signature
-      if (!options.silent) wx.showNavigationBarLoading()
+      if (!options.silent) {
+        requestNum++
+        if (requestNum == 1) wx.showNavigationBarLoading()
+      }
       wx.uploadFile({
         url: url,
         name: 'filecontent',
@@ -122,7 +125,10 @@ function cosUpload(options) {
           reject(res)
         },
         complete: function (res) {
-          // wx.hideNavigationBarLoading()
+          if (!options.silent) {
+            requestNum--
+            if (requestNum == 0) wx.hideNavigationBarLoading()
+          }
         }
       })
     })
@@ -143,7 +149,10 @@ function cosDelete(options) {
     }).then(function (res) {
       let url = res.url
       let sign = res.once_signature
-      if (!options.silent) wx.showNavigationBarLoading()
+      if (!options.silent) {
+        requestNum++
+        if (requestNum == 1) wx.showNavigationBarLoading()
+      }
       wx.request({
         url: url,
         header: { 'Authorization': sign },
@@ -161,7 +170,10 @@ function cosDelete(options) {
           reject(res)
         },
         complete: function (res) {
-          // wx.hideNavigationBarLoading()
+          if (!options.silent) {
+            requestNum--
+            if (requestNum == 0) wx.hideNavigationBarLoading()
+          }
         }
       })
     })

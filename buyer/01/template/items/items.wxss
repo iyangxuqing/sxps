@@ -1,7 +1,12 @@
-.items {
+scroll-view.items {
+  height: 100%;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+.items-inner {
   display: flex;
   flex-wrap: wrap;
-  padding: 30rpx;
 }
 
 .item {
@@ -25,7 +30,7 @@
   margin-bottom: 10rpx;
 }
 
-.item-new .item-image{
+.item-new .item-image {
   padding: 40rpx;
   opacity: 0.5;
   border: 2rpx solid #ccc;
