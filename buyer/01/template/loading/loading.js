@@ -1,23 +1,22 @@
 export class Loading {
 
-  constructor() {
+  constructor(options) {
+    this.page = options.page
     this.timer = null
   }
 
-  show(options = { mask: false }) {
-    let page = getCurrentPages().pop()
+  show(options) {
     this.timer = setTimeout(function () {
-      page.setData({
+      this.page.setData({
         'loading.show': true,
         'loading.mask': options.mask,
       })
-    }, 300)
+    }.bind(this), 300)
   }
 
   hide() {
-    let page = getCurrentPages().pop()
     clearTimeout(this.timer)
-    page.setData({
+    this.page.setData({
       'loading.show': false,
       'loading.mask': false,
     })

@@ -35,60 +35,54 @@ function setShopping(item) {
 let methods = {
 
   onPurchaseCancel: function (e) {
-    let page = getCurrentPages().pop()
-    page.setData({
+    this.page.setData({
       'purchase.show': false
     })
   },
 
   onPurchaseConfirm: function (e) {
-    let page = getCurrentPages().pop()
-    let item = page.data.purchase.item
-    page.setData({
+    let item = this.page.data.purchase.item
+    this.page.setData({
       'purchase.show': false
     })
     setShopping(item)
   },
 
   onPurchaseNumberMinus: function (e) {
-    let page = getCurrentPages().pop()
-    let item = page.data.purchase.item
+    let item = this.page.data.purchase.item
     if (!item.num) item.num = 0
     if (item.num > 0) item.num--
     if (item.num < 0) item.num = 0
     item.amount = Number(item.num * item.price).toFixed(2)
-    page.setData({
+    this.page.setData({
       'purchase.item': item,
     })
   },
 
   onPurchaseNumberPlus: function (e) {
-    let page = getCurrentPages().pop()
-    let item = page.data.purchase.item
+    let item = this.page.data.purchase.item
     if (!item.num) item.num = 0
     if (item.num < 9999) item.num = Number(item.num) + 1
     item.amount = Number(item.num * item.price).toFixed(2)
-    page.setData({
+    this.page.setData({
       'purchase.item': item,
     })
   },
 
   onPurchaseNumberInput: function (e) {
-    let page = getCurrentPages().pop()
-    let item = page.data.purchase.item
+    let item = this.page.data.purchase.item
     item.num = e.detail.value
     if (item.num < 0) item.num = 0
     item.amount = Number(item.num * item.price).toFixed(2)
-    page.setData({
+    this.page.setData({
       'purchase.item': item,
     })
   },
 
   onPurchaseMessageInput: function (e) {
-    let page = getCurrentPages().pop()
-    let item = page.data.purchase.item
+    let item = this.page.data.purchase.item
     item.message = e.detail.value
-    page.setData({
+    this.page.setData({
       'purchase.item': item,
     })
   },
@@ -97,23 +91,22 @@ let methods = {
 
 export class Purchase {
 
-  constructor(options = {}) {
-    let page = getCurrentPages().pop()
+  constructor(options) {
     options = Object.assign({}, defaults, options)
+    this.page = options.page
     for (let key in methods) {
       this[key] = methods[key].bind(this)
-      page['purchase.' + key] = methods[key].bind(this)
-      page.setData({
+      this.page['purchase.' + key] = methods[key].bind(this)
+      this.page.setData({
         ['purchase.' + key]: 'purchase.' + key
       })
     }
   }
 
   show(item) {
-    let page = getCurrentPages().pop()
     let num = item.num ? item.num : 0
     item.amount = Number(num * item.price).toFixed(2)
-    page.setData({
+    this.page.setData({
       'purchase.item': item,
       'purchase.show': true,
     })

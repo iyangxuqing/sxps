@@ -63,6 +63,7 @@ Page({
         ready: true
       })
     }.bind(this)).catch(function (res) {
+      console.log('1002', res)
       this.setData({
         'netfail.id': 1002,
         'netfail.show': true
@@ -74,9 +75,11 @@ Page({
     app.listener.on('trades', this.onTradesUpdate)
     let tradeLinks = this.data.tradeLinks
     this.topnavs = new Topnavs({
+      page: this,
       items: tradeLinks,
       onTopnavTap: this.onTopnavTap
     })
+    this.loadData()
   },
 
   onReady: function () {
@@ -84,21 +87,7 @@ Page({
   },
 
   onShow: function () {
-    let tradeLinks = this.data.tradeLinks
-    let tradeStatus = wx.getStorageSync('buyerTradeStatus')
-    if (tradeStatus) {
-      wx.removeStorageSync('buyerTradeStatus')
-      for (let i in tradeLinks) {
-        tradeLinks[i].active = false
-        if (tradeLinks[i].status == tradeStatus.status) {
-          tradeLinks[i].active = true
-        }
-      }
-      this.setData({
-        'topnavs.items': tradeLinks
-      })
-    }
-    this.loadData()
+
   },
 
   onHide: function () {

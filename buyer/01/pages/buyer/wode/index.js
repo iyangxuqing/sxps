@@ -9,9 +9,10 @@ Page({
   data: {
     youImageMode_v2: app.youImageMode_v2,
     sellerInfo: {
-      title: '义乌市铱星生鲜配送',
+      title: '义乌铱星生鲜配送',
       logo: '/images/icon/logo.png',
       phone: '13757950478',
+      version: '1.0.28',
     },
     tradeLinks: [{
       title: '已提交',
@@ -109,10 +110,10 @@ Page({
   },
 
   onLoad: function (options) {
-    this.toptip = new Toptip()
-    this.mobile = new Mobile()
     app.listener.on('toptip', this.onToptip)
     app.listener.on('userUpdate', this.onUserUpdate)
+    this.toptip = new Toptip({ page: this })
+    this.mobile = new Mobile({ page: this })
     this.loadData()
   },
 

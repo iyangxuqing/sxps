@@ -3,8 +3,7 @@ let defaults = {}
 let methods = {
 
   getActiveCId: function () {
-    let page = getCurrentPages().pop()
-    let cates = page.data.cates.cates
+    let cates = this.page.data.cates.cates
     for (let i in cates) {
       if (cates[i].active == true) {
         for (let j in cates[i].children) {
@@ -17,10 +16,9 @@ let methods = {
   },
 
   onCateTap: function (e) {
-    let page = getCurrentPages().pop()
     let id = e.currentTarget.dataset.id
     let pid = e.currentTarget.dataset.pid
-    let cates = page.data.cates.cates
+    let cates = this.page.data.cates.cates
     if (!pid) {
       for (let i in cates) {
         cates[i].active = false
@@ -37,7 +35,7 @@ let methods = {
         }
       }
     }
-    page.setData({
+    this.page.setData({
       'cates.cates': cates
     })
     this.cateChanged && this.cateChanged(this.getActiveCId())
@@ -47,22 +45,21 @@ let methods = {
 
 export class Cates {
 
-  constructor(options = {}) {
-    let page = getCurrentPages().pop()
+  constructor(options) {
     options = Object.assign({}, defaults, options)
+    this.page = options.page
     this.cateChanged = options.cateChanged
     for (let key in methods) {
       this[key] = methods[key].bind(this)
-      page['cates.' + key] = methods[key].bind(this)
-      page.setData({
+      this.page['cates.' + key] = methods[key].bind(this)
+      this.page.setData({
         ['cates.' + key]: 'cates.' + key
       })
     }
   }
 
   update(cates) {
-    let page = getCurrentPages().pop()
-    let oldCates = page.data.cates.cates
+    let oldCates = this.page.data.cates.cates
     let activeIds = []
     for (let i in oldCates) {
       if (oldCates[i].active == true) {
@@ -105,7 +102,7 @@ export class Cates {
         cates[i].children[0].active = true
       }
     }
-    page.setData({
+    this.page.setData({
       'cates.cates': cates
     })
   }

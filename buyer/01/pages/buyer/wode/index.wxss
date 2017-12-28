@@ -17,11 +17,12 @@ page {
   align-items: center;
   height: 110rpx;
   font-size: 32rpx;
-  margin-bottom: 20rpx;
+  margin-bottom: 40rpx;
   background-color: #fff;
 }
 
 .address-icon {
+  flex-shrink: 0;
   width: 100rpx;
   height: 100rpx;
   padding: 30rpx;
@@ -30,7 +31,6 @@ page {
 .address-label {
   flex-shrink: 0;
   width: 160rpx;
-  margin-left: -10rpx;
 }
 
 .address-value {
@@ -51,8 +51,8 @@ page {
 .card-head {
   display: flex;
   align-items: center;
-  height: 90rpx;
-  border-bottom: 1px solid #ddd;
+  height: 110rpx;
+  border-bottom: 2rpx solid #ddd;
 }
 
 .card-head-title {
@@ -116,9 +116,8 @@ page {
 }
 
 .shop-image {
-  width: 200rpx;
-  height: 200rpx;
-  padding: 20rpx;
+  width: 240rpx;
+  height: 240rpx;
 }
 
 .shop-info {
@@ -126,9 +125,9 @@ page {
 }
 
 .shop-info-title {
-  font-size: 42rpx;
+  font-size: 48rpx;
   font-weight: 400;
-  margin-bottom: 20rpx;
+  margin-bottom: 30rpx;
 }
 
 .shop-info-tele {

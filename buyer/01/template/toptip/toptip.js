@@ -1,24 +1,22 @@
 export class Toptip {
 
-  constructor() {
+  constructor(options) {
+    this.page = options.page
     this.timer = null
   }
 
-  show(options = {}) {
-    let page = getCurrentPages().pop()
-    if (page) {
-      page.setData({
-        'toptip.show': 'show',
-        'toptip.title': options.title,
+  show(options) {
+    this.page.setData({
+      'toptip.show': 'show',
+      'toptip.title': options.title,
+    })
+    clearTimeout(this.timer)
+    this.timer = setTimeout(function () {
+      this.page.setData({
+        'toptip.show': ''
       })
-      clearTimeout(this.timer)
-      this.timer = setTimeout(function () {
-        page.setData({
-          'toptip.show': ''
-        })
-        options.success && options.success()
-      }, 1500)
-    }
+      options.success && options.success()
+    }.bind(this), 1500)
   }
 
 }

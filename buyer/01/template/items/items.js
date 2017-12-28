@@ -6,8 +6,7 @@ let methods = {
 
   onItemTap: function (e) {
     let id = e.currentTarget.dataset.id
-    let page = getCurrentPages().pop()
-    let items = page.data.items.items
+    let items = this.page.data.items.items
     let item = {}
     for (let i in items) {
       if (items[i].id == id) {
@@ -22,24 +21,23 @@ let methods = {
 
 export class Items {
 
-  constructor(options = {}) {
-    let page = getCurrentPages().pop()
+  constructor(options) {
     options = Object.assign({}, defaults, options)
+    this.page = options.page
     this.itemTap = options.itemTap
-    page.setData({
+    this.page.setData({
       'items.items': options.items
     })
     for (let key in methods) {
       this[key] = methods[key].bind(this)
-      page['items.' + key] = methods[key].bind(this)
-      page.setData({
+      this.page['items.' + key] = methods[key].bind(this)
+      this.page.setData({
         ['items.' + key]: 'items.' + key
       })
     }
   }
 
   update(items, fliter = {}) {
-    let page = getCurrentPages().pop()
     let cid = fliter.cid
     let ids = fliter.ids
     let searchWord = fliter.searchWord
@@ -81,7 +79,7 @@ export class Items {
         }
       }
     }
-    page.setData({
+    this.page.setData({
       'items.items': _items,
       'items.scrollTop': 0,
     })

@@ -21,7 +21,7 @@
         </view>
         <view class="trade-orders">
           <block wx:for="{{trade.orders}}" wx:key="" wx:for-item="order">
-            <view class="order" data-iid="{{order.iid}}" catchtap="onOrderTap">
+            <view class="order" data-iid="{{order.iid}}">
               <view class="order-image">
                 <image src="{{order.image + youImageMode_v2}}" mode="aspectFill" />
               </view>

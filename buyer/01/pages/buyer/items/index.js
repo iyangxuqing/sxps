@@ -120,12 +120,15 @@ Page({
   onLoad: function (options) {
     app.listener.on('shoppings', this.onShoppingsUpdate)
     this.cates = new Cates({
+      page: this,
       cateChanged: this.onCateChanged
     })
     this.items = new Items({
+      page: this,
       itemTap: this.onItemTap
     })
     this.purchase = new Purchase({
+      page: this,
       purchaseConfirm: this.onPurchaseConfirm
     })
     this.loadData()

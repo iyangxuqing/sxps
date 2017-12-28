@@ -1,6 +1,6 @@
 import { User } from '../../utils/user.js'
 
-let data = {
+let defaults = {
   mobile: {
     codeRequestText: '发送验证码',
     number: '',
@@ -24,130 +24,120 @@ let methods = {
   },
 
   onCodeRequest: function (e) {
-    let page = getCurrentPages().pop()
     let mobile = e.detail.value.number
     if (mobile == '') return
 
-    let codeRequestText = page.data.mobile.codeRequestText
+    let codeRequestText = this.page.data.mobile.codeRequestText
     if (codeRequestText != '发送验证码') return
 
     var reg = /^1[3|4|5|7|8]\d{9}$/
     if (!reg.test(mobile)) {
       getApp().listener.trigger('toptip', '手机号码输入有误')
-      page.setData({
+      this.page.setData({
         'mobile.numberError': true
       })
       return
     }
 
-    page.setData({
+    this.page.setData({
       'mobile.number': mobile,
       'mobile.codeRequested': true,
     })
 
-    User.mobileCodeRequest(mobile)
-      .then(function (res) {
-        if (res.error == 'this mobile is used') {
-          getApp().listener.trigger('toptip', '手机号码已被绑定')
-          page.setData({
-            'mobile.numberError': true
-          })
-        }
-      })
+    User.mobileCodeRequest(mobile).then(function (res) {
+      if (res.error == 'this mobile is used') {
+        getApp().listener.trigger('toptip', '手机号码已被绑定')
+        this.page.setData({
+          'mobile.numberError': true
+        })
+      }
+    }.bind(this))
 
     let second = 60
-    page.setData({
+    this.page.setData({
       'mobile.codeRequestText': '60秒后重发'
     })
     let timer = setInterval(function () {
       second--
       if (second == 0) {
         let codeRequestText = '发送验证码'
-        page.setData({
+        this.page.setData({
           'mobile.codeRequestText': codeRequestText
         })
         clearInterval(timer)
       } else {
         let codeRequestText = second + '秒后重发'
         if (second < 10) codeRequestText = '0' + codeRequestText
-        page.setData({
+        this.page.setData({
           'mobile.codeRequestText': codeRequestText
         })
       }
-    }, 1000)
+    }.bind(this), 1000)
   },
 
   onNumberInputFocus: function (e) {
-    let page = getCurrentPages().pop()
-    page.setData({
+    this.page.setData({
       'mobile.numberError': false
     })
   },
 
   onCodeInput: function (e) {
-    let page = getCurrentPages().pop()
-    page.setData({
+    this.page.setData({
       'mobile.code': e.detail.value
     })
   },
 
   onCodeInputFocus: function (e) {
-    let page = getCurrentPages().pop()
-    page.setData({
+    this.page.setData({
       'mobile.codeError': false
     })
   },
 
   onCodeConfirm: function (e) {
-    let page = getCurrentPages().pop()
-    let mobile = page.data.mobile.number
-    let code = page.data.mobile.code
+    let mobile = this.page.data.mobile.number
+    let code = this.page.data.mobile.code
     if (code == '') return;
 
-    User.mobileCodeVerify(mobile, code)
-      .then(function (res) {
-        if (!res.error) {
-          page.setData({
-            'mobile.codeInputAnimateCss': 'slideUp'
+    User.mobileCodeVerify(mobile, code).then(function (res) {
+      if (!res.error) {
+        this.page.setData({
+          'mobile.codeInputAnimateCss': 'slideUp'
+        })
+        setTimeout(function () {
+          this.page.setData({
+            'mobile.verified': true,
+            'mobile.codeRequested': false,
           })
-          setTimeout(() => {
-            page.setData({
-              'mobile.verified': true,
-              'mobile.codeRequested': false,
-            })
-          }, 300)
-        } else {
-          page.setData({
-            'mobile.codeError': true
-          })
-          getApp().listener.trigger('toptip', '验证码错误')
-        }
-      }.bind(this))
-      .catch(function (res) {
-        page.setData({
+        }.bind(this), 300)
+      } else {
+        this.page.setData({
           'mobile.codeError': true
         })
         getApp().listener.trigger('toptip', '验证码错误')
-      }.bind(this))
+      }
+    }.bind(this)).catch(function (res) {
+      this.page.setData({
+        'mobile.codeError': true
+      })
+      getApp().listener.trigger('toptip', '验证码错误')
+    }.bind(this))
   }
 }
 
 export class Mobile {
-  constructor(options) {
-    this.init()
-  }
 
-  init() {
-    let page = getCurrentPages().pop()
-    let mobile = Object.assign({}, data.mobile)
-    page.setData({
-      mobile: mobile
+  constructor(options) {
+    options = Object.assign({}, defaults.mobile, options)
+    this.page = options.page
+    this.page.setData({
+      mobile: options.mobile
     })
     for (let key in methods) {
-      page['mobile.' + key] = methods[key].bind(this)
-      page.setData({
+      this.page['mobile.' + key] = methods[key].bind(this)
+      this.page.setData({
         ['mobile.' + key]: 'mobile.' + key
       })
     }
   }
+
 }

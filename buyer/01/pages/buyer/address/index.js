@@ -16,7 +16,7 @@ Page({
   },
 
   onLoad: function (options) {
-    this.toptip = new Toptip()
+    this.toptip = new Toptip({ page: this })
     User.getUser().then(function (user) {
       let region = this.data.region
       if (user.receive_province) region[0] = user.receive_province

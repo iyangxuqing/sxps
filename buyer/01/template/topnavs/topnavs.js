@@ -1,11 +1,9 @@
 let defaults = {
   items: [{
     title: '待发货',
-  },
-  {
+  }, {
     title: '已发货',
-  },
-  {
+  }, {
     title: '已完成',
   }],
   justify: 'justify-between'
@@ -13,14 +11,13 @@ let defaults = {
 
 let methods = {
   onTopnavTap: function (e) {
-    let page = getCurrentPages().pop()
     let index = e.currentTarget.dataset.index
-    let items = page.data.topnavs.items
+    let items = this.page.data.topnavs.items
     for (let i in items) {
       items[i].active = false
     }
     items[index].active = true
-    page.setData({
+    this.page.setData({
       'topnavs.items': items
     })
     this.onTopnavTap && this.onTopnavTap(index, items[index])
@@ -37,8 +34,8 @@ let methods = {
 export class Topnavs {
 
   constructor(options = {}) {
-    let page = getCurrentPages().pop()
     options = Object.assign({}, defaults, options)
+    this.page = options.page
     this.onTopnavTap = options.onTopnavTap
     let hasSetActive = false
     for (let i in options.items) {
@@ -50,21 +47,20 @@ export class Topnavs {
     if (!hasSetActive) {
       options.items[0].active = true
     }
-    page.setData({
+    this.page.setData({
       'topnavs.items': options.items,
       'topnavs.justify': options.justify,
     })
     for (let key in methods) {
-      page['topnavs.' + key] = methods[key].bind(this)
-      page.setData({
+      this.page['topnavs.' + key] = methods[key].bind(this)
+      this.page.setData({
         ['topnavs.' + key]: 'topnavs.' + key
       })
     }
   }
 
   getActiveItem() {
-    let page = getCurrentPages().pop()
-    let items = page.data.topnavs.items
+    let items = this.page.data.topnavs.items
     for (let i in items) {
       if (items[i].active == true) {
         return items[i]

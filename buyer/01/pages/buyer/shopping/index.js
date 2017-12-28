@@ -122,7 +122,7 @@ Page({
 
   onLoad: function (options) {
     app.listener.on('shoppings', this.onShoppingsUpdate)
-    this.purchase = new Purchase()
+    this.purchase = new Purchase({ page: this })
     this.loadData()
   },
 
