@@ -12,7 +12,7 @@ App({
 
   init: function () {
     this.listener = new Listener()
-    this.youImageMode = config.youImageMode
+    this.version = config.version
     this.youImageMode_v2 = config.youImageMode_v2
     this.youImageMode_v5 = config.youImageMode_v5
     User.login({ silent: true })

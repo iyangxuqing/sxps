@@ -12,7 +12,7 @@ Page({
       title: '义乌铱星生鲜配送',
       logo: '/images/icon/logo.png',
       phone: '13757950478',
-      version: '1.0.28',
+      version: app.version,
     },
     tradeLinks: [{
       title: '已提交',

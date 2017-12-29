@@ -127,7 +127,9 @@ let methods = {
 export class Mobile {
 
   constructor(options) {
-    options = Object.assign({}, defaults.mobile, options)
+    console.log(options)
+    options = Object.assign({}, defaults, options)
+    console.log(options)
     this.page = options.page
     this.page.setData({
       mobile: options.mobile
