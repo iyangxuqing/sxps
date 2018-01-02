@@ -48,6 +48,14 @@ let methods = {
     setShopping(item)
   },
 
+  onPurchaseImageTap: function(e){
+    let item = this.page.data.purchase.item
+    let image = item.images[0]
+    wx.previewImage({
+      urls: [image]
+    })
+  },
+
   onPurchaseNumberMinus: function (e) {
     let item = this.page.data.purchase.item
     if (!item.num) item.num = 0

@@ -4,7 +4,7 @@
     <view class="purchase-content">
       <view class="purchase-content-inner">
         <view class="purchase-item-info">
-          <view class="purchase-item-image">
+          <view class="purchase-item-image" catchtap="{{onPurchaseImageTap}}">
             <image src="{{item.images[0] ? item.images[0] + youImageMode_v2 : ''}}" />
           </view>
           <view class="purchase-item-text">
