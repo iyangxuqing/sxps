@@ -28,22 +28,25 @@ function getItems_seller(options = {}) {
 
 function setItem_seller(item, method) {
   return new Promise(function (resolve, reject) {
-    http.get({
-      url: 'sxps_seller/item.php?m=' + method,
-      data: item
-    }).then(function (res) {
-      let items = res.items
-      for (let i in items) {
-        if (!items[i].images) items[i].images = '[]'
-        items[i].images = JSON.parse(items[i].images)
-        items[i].price = Number(items[i].price).toFixed(2)
-      }
-      app.items_seller = items
-      app.listener.trigger('items', items)
-      resolve(items)
-    }).catch(function (res) {
-      reject(res)
-    })
+    let user = wx.getStorageSync('user')
+    if (user.role == 'seller_admin') {
+      http.get({
+        url: 'sxps_seller/item.php?m=' + method,
+        data: item
+      }).then(function (res) {
+        let items = res.items
+        for (let i in items) {
+          if (!items[i].images) items[i].images = '[]'
+          items[i].images = JSON.parse(items[i].images)
+          items[i].price = Number(items[i].price).toFixed(2)
+        }
+        app.items_seller = items
+        app.listener.trigger('items', items)
+        resolve(items)
+      }).catch(function (res) {
+        reject(res)
+      })
+    }
   })
 }
 

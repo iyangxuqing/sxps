@@ -8,13 +8,13 @@
 <view class="container" wx:if="{{ready}}">
   <template is="userInfo" data="{{...userInfo}}" />
   <template is="mobile" data="{{...mobile}}" />
-  <template is="sellerInfo" data="{{...sellerInfo}}" />
+  <template is="sellerInfo" data="{{...sellerInfo, version}}" />
 </view>
 
 <template name="sellerInfo">
   <view class="card sellerInfo">
     <view class="card-head">
-      <view class="card-head-title">铱星生鲜</view>
+      <view class="card-head-title">铱星生鲜({{version}})</view>
     </view>
     <view class="card-body">
       <view class="shop">

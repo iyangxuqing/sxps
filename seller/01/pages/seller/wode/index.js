@@ -8,6 +8,7 @@ let app = getApp()
 Page({
 
   data: {
+    version: app.version,
     youImageMode: app.youImageMode_v2,
     sellerInfo: {
       title: '义乌市铱星生鲜配送',

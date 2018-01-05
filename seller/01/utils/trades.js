@@ -29,15 +29,18 @@ function getTrades_seller(options = {}) {
  */
 function setTrades_seller(options) {
   return new Promise(function (resolve, reject) {
-    if (!('length' in options)) options = [options]
-    http.post({
-      url: 'sxps_seller/trade.php?m=set',
-      data: options
-    }).then(function (res) {
-      resolve(res)
-    }).catch(function (res) {
-      reject(res)
-    })
+    let user = wx.getStorageSync('user')
+    if (user.role == 'seller_admin') {
+      if (!('length' in options)) options = [options]
+      http.post({
+        url: 'sxps_seller/trade.php?m=set',
+        data: options
+      }).then(function (res) {
+        resolve(res)
+      }).catch(function (res) {
+        reject(res)
+      })
+    }
   })
 }
 

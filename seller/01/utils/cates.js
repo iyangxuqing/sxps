@@ -23,18 +23,21 @@ function getCates_seller(options = {}) {
 
 function setCate_seller(cate, method) {
   return new Promise(function (resolve, reject) {
-    http.get({
-      url: 'sxps/cate.php?m=' + method,
-      data: cate
-    }).then(function (res) {
-      if (!res.error) {
-        res.cates = transformCates(res.cates)
-        app.cates_seller = res.cates
-      }
-      resolve(res)
-    }).catch(function (res) {
-      reject(res)
-    })
+    let user = wx.getStorageSync('user')
+    if(user.role=='seller_admin'){
+      http.get({
+        url: 'sxps/cate.php?m=' + method,
+        data: cate
+      }).then(function (res) {
+        if (!res.error) {
+          res.cates = transformCates(res.cates)
+          app.cates_seller = res.cates
+        }
+        resolve(res)
+      }).catch(function (res) {
+        reject(res)
+      })
+    }
   })
 }
 
