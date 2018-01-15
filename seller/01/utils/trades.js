@@ -5,9 +5,10 @@ let app = getApp()
 
 /**
  * 读取卖家订单，按时间段、分页、订单状态来读取
- * options.status，按状态读取
- * options.lastRowId，分页读取，读回id>lastRowId的最近10条记录
+ * options.status, 按状态读取
+ * options.lastRowId, 分页读取, 读回id>lastRowId的最近10条记录
  * options.startTime, options.endTime,按时段[startTime, endTime)读取
+ * options.desc, 按tid倒序读取
  */
 function getTrades_seller(options = {}) {
   return new Promise(function (resolve, reject) {

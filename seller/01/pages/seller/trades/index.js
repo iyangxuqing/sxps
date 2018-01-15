@@ -155,6 +155,7 @@ Page({
     let search = {
       startTime: this.startTime / 1000,
       endTime: this.endTime / 1000,
+      // desc: true,
     }
     if (this.tradeStatus) search.status = this.tradeStatus
     if (this.searchWord) search.searchWord = this.searchWord
@@ -185,9 +186,9 @@ Page({
     let month = date.getMonth()
     let day = date.getDate()
     let hour = date.getHours()
-    let startDate = new Date(year, month, day)
-    if (hour < 10) startDate = new Date(startDate.getTime() - 86400000)
-    let endDate = new Date(startDate.getTime() + 86400000)
+    let today = new Date(year, month, day)
+    let startDate = new Date(today.getTime() - 86400000)
+    let endDate = new Date(today.getTime() + 86400000)
 
     this.startTime = startDate.getTime()
     this.endTime = endDate.getTime()

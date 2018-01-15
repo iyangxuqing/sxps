@@ -68,11 +68,9 @@ Page({
     let month = date.getMonth()
     let day = date.getDate()
     let hour = date.getHours()
-    let startDate = new Date(year, month, day)
-    if (hour < 10) {
-      startDate = new Date(startDate.getTime() - 86400000)
-    }
-    let endDate = new Date(startDate.getTime() + 86400000)
+    let today = new Date(year, month, day)
+    let startDate = new Date(today.getTime() - 86400000)
+    let endDate = new Date(today.getTime() + 86400000)
     this.datetimes = new DateTimes({
       date1: startDate,
       date2: endDate,
