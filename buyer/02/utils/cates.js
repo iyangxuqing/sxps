@@ -1,17 +1,21 @@
 import { http } from 'http.js'
+import { Dataver } from 'dataver.js'
 
 let app = getApp()
 
 function getCates(options = {}) {
   return new Promise(function (resolve, reject) {
-    if (app.cates && !options.nocache) {
+    let cates = wx.getStorageSync('cates')
+    let expired = Dataver.getExpired('cates')
+    if (cates && !expired && !options.nocache) {
       resolve(cates)
     } else {
       http.get({
         url: 'sxps_buyer/cate.php?m=get',
       }).then(function (res) {
         let cates = transformCates(res.cates)
-        app.cates = cates
+        wx.setStorageSync('cates', cates)
+        Dataver.setExpired('cates', res.dataver)
         resolve(cates)
       }).catch(function (res) {
         reject(res)

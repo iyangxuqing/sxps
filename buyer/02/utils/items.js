@@ -1,11 +1,14 @@
 import { http } from 'http.js'
+import { Dataver } from 'dataver.js'
 
 let app = getApp()
 
 function getItems(options = {}) {
   return new Promise(function (resolve, reject) {
-    if (app.items && !options.nocache) {
-      resolve(app.items)
+    let items = wx.getStorageSync('items')
+    let expired = Dataver.getExpired('items')
+    if (items && !expired && !options.nocache) {
+      resolve(items)
     } else {
       http.get({
         url: 'sxps_buyer/item.php?m=get',
@@ -17,7 +20,8 @@ function getItems(options = {}) {
           items[i].images = JSON.parse(items[i].images)
           items[i].price = Number(items[i].price).toFixed(2)
         }
-        app.items = items
+        wx.setStorageSync('items', items)
+        Dataver.setExpired('items', res.dataver)
         resolve(items)
       }).catch(function (res) {
         reject(res)
