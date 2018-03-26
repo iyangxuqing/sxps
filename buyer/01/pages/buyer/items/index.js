@@ -1,6 +1,7 @@
 import { Cate } from '../../../utils/cates.js'
 import { Item } from '../../../utils/items.js'
 import { getShoppings } from '../../../utils/shoppings.js'
+import { BuyerMessage } from '../../../utils/buyerMessage.js'
 
 import { Cates } from '../../../template/cates/cates.js'
 import { Items } from '../../../template/items/items.js'
@@ -92,7 +93,7 @@ Page({
   loadData: function (options) {
     Promise.all([
       Cate.getCates(options),
-      Item.getItems(options),
+      Item.getItems(options)
     ]).then(function (res) {
       let cates = res[0]
       let items = res[1]

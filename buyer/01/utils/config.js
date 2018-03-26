@@ -1,4 +1,4 @@
-module.exports.version = '1.0.31'
+module.exports.version = '2.0.00'
 module.exports.aid = "sxps_buyer_001"
 module.exports.apiUrl = 'https://yixing01.applinzi.com/'
 module.exports.cosImageHost = 'http://sxps-1253299728.cossh.myqcloud.com/'
@@ -16,6 +16,9 @@ module.exports.youImageMode_v5 = '?imageMogr2/thumbnail/500x'
  * 
  * 1.0.31 - 20180128
  * 改变cates、items的缓存方式，由localStorage改为app内存中
+ * 
+ * 2.0.00 - 20180327
+ * 增加商品属性选购
  */
 
 

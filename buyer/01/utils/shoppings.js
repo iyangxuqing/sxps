@@ -6,7 +6,6 @@ export function getShoppings(items) {
     for (let j in item.specs) {
       let specs = item.specs[j]
       specs.num = 0
-      specs.message = ''
       for (let k in shoppings) {
         let shopping = shoppings[k]
         if (item.id == shopping.iid && specs.id == shopping.sid) {
