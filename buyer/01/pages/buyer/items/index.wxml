@@ -6,7 +6,6 @@
 <template is="netfail" data="{{...netfail}}" />
 
 <view class="container" wx:if="{{ready}}">
-
   <view class="page-head">
     <view class="search">
       <view class="search-input">

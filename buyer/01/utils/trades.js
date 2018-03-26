@@ -13,7 +13,7 @@ function getTrades_buyer(options = {}) {
       resolve(app.trades_buyer)
     } else {
       http.get({
-        url: 'sxps_buyer/trade.php?m=get',
+        url: 'sxps2/buyer/_trade.php?m=get',
       }).then(function (res) {
         if (res.errno === 0) {
           let trades = transformTrades(res.trades)
@@ -35,7 +35,7 @@ function getTrades_buyer(options = {}) {
 function addTrade_buyer(orders) {
   return new Promise(function (resolve, reject) {
     http.post({
-      url: 'sxps_buyer/trade.php?m=add',
+      url: 'sxps2/buyer/_trade.php?m=add',
       data: orders
     }).then(function (res) {
       if (res.errno === 0) {

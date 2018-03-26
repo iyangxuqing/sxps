@@ -5,7 +5,7 @@ function login(options) {
     wx.login({
       success: function (res) {
         http.post({
-          url: 'sxps_buyer/user.php?m=login',
+          url: 'sxps2/buyer/_user.php?m=login',
           data: { code: res.code },
           silent: options.silent
         }).then(function (res) {
@@ -28,7 +28,7 @@ function getUser(options = {}) {
       resolve(user)
     } else {
       http.get({
-        url: 'sxps_buyer/user.php?m=get',
+        url: 'sxps2/buyer/_user.php?m=get',
         data: options
       }).then(function (res) {
         wx.setStorageSync('user', res.user)

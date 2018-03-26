@@ -1,6 +1,7 @@
 import { Item } from '../../../utils/items.js'
 import { Trade } from '../../../utils/trades.js'
 import { User } from '../../../utils/user.js'
+import { removeShoppings } from '../../../utils/shoppings.js'
 import { Purchase } from '../../../template/purchase/purchase.js'
 
 let app = getApp()
@@ -13,6 +14,7 @@ Page({
 
   onOrderTap: function (e) {
     let iid = e.currentTarget.dataset.iid
+    let sid = e.currentTarget.dataset.sid
     let item = {}
     Item.getItems().then(function (items) {
       for (let i in items) {
@@ -21,12 +23,10 @@ Page({
           break
         }
       }
-      let shoppings = wx.getStorageSync('shoppings')
-      for (let i in shoppings) {
-        if (shoppings[i].iid == iid) {
-          item.num = shoppings[i].num
-          item.message = shoppings[i].message
-          break
+      for (let i in item.specs) {
+        item.specs[i].active = false
+        if (item.specs[i].id == sid) {
+          item.specs[i].active = true
         }
       }
       this.purchase.show(item)
@@ -54,7 +54,7 @@ Page({
                   content: '订单提交成功，将进入采买程序。',
                   showCancel: false,
                   success: function () {
-                    wx.removeStorageSync('shoppings')
+                    removeShoppings()
                     app.listener.trigger('shoppings')
                     app.listener.trigger('trades')
                     this.setData({ orders: [] })
@@ -94,20 +94,26 @@ Page({
     Item.getItems().then(function (items) {
       let orders = []
       for (let i in shoppings) {
+        let shopping = shoppings[i]
         for (let j in items) {
-          if (shoppings[i].iid == items[j].id) {
-            let order = {
-              iid: items[j].id,
-              sid: items[j].sid,
-              title: items[j].title,
-              descs: items[j].descs,
-              image: items[j].images[0],
-              price: items[j].price,
-              num: shoppings[i].num,
-              message: shoppings[i].message,
+          let item = items[j]
+          for (let k in item.specs) {
+            let specs = item.specs[k]
+            if (shopping.iid == item.id && shopping.sid == specs.id) {
+              let order = {
+                iid: item.id,
+                sid: specs.id,
+                title: item.specs[0].title,
+                specs: k == 0 ? '' : specs.title,
+                descs: specs.descs,
+                image: specs.image,
+                price: specs.price,
+                num: shopping.num,
+                message: shopping.message
+              }
+              orders.push(order)
+              break
             }
-            orders.push(order)
-            break
           }
         }
       }

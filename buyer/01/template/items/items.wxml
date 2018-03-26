@@ -1,13 +1,13 @@
 <template name="items">
   <scroll-view class="items" scroll-y scroll-top="{{scrollTop}}">
      <view class="items-inner"> 
-      <block wx:for="{{items}}" wx:key="">
+      <block wx:for="{{items}}" wx:for-item="item" wx:key="item.id">
         <view class="item" data-id="{{item.id}}" catchtap="{{onItemTap}}">
           <view class="item-image">
-            <image src="{{item.images[0] ? item.images[0] + youImageMode_v2 + '&t=1' : ''}}" />
+            <image src="{{item.specs[0].image ? item.specs[0].image + youImageMode_v2 : ''}}" />
           </view>
-          <view class="item-title">{{item.title}}</view>
-          <view class="item-price">￥{{item.price}}</view>
+          <view class="item-title">{{item.specs[0].title}}</view>
+          <view class="item-price">￥{{item.specs[0].price}}</view>
           <view class="item-num" wx:if="{{item.num}}">{{item.num}}</view>
         </view>
       </block>

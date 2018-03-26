@@ -8,7 +8,7 @@ function getCates(options = {}) {
       resolve(cates)
     } else {
       http.get({
-        url: 'sxps_buyer/cate.php?m=get',
+        url: 'sxps2/buyer/_cate.php?m=get'
       }).then(function (res) {
         let cates = transformCates(res.cates)
         app.cates = cates

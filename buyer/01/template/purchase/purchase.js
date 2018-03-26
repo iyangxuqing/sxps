@@ -1,99 +1,116 @@
+import { getSelectSpecs, setShoppings, setHistoryItems, setSelectSpecs } from '../../utils/shoppings.js'
+
+const Content_Height_With_Specs = 700
+const Content_Height_Without_Specs = 520
+
 let defaults = {}
-
-function setShopping(item) {
-  let historyItems = wx.getStorageSync('historyItems') || []
-  for (let i in historyItems) {
-    if (historyItems[i].id == item.id) {
-      historyItems.splice(i, 1)
-      break
-    }
-  }
-  historyItems.unshift({ id: item.id })
-  while (historyItems.length > 30) historyItems.pop()
-  wx.setStorageSync('historyItems', historyItems)
-
-  let shoppings = wx.getStorageSync('shoppings') || []
-  let shopping = {
-    iid: item.id,
-    num: item.num,
-    message: item.message,
-  }
-  let index = -1
-  for (let i in shoppings) {
-    if (shoppings[i].iid == item.id) {
-      shoppings[i] = shopping
-      index = i
-      break
-    }
-  }
-  if (index < 0) shoppings.push(shopping)
-  if (shopping.num == 0) shoppings.splice(index, 1)
-  wx.setStorageSync('shoppings', shoppings)
-  getApp().listener.trigger('shoppings')
-}
 
 let methods = {
 
-  onPurchaseCancel: function (e) {
+  onSpecsTap: function(e) {
+    let index = e.target.dataset.index
+    let item = this.page.data.purchase.item
+    for(let i in item.specs) {
+      item.specs[i].active = false
+    }
+    item.specs[index].active = true
     this.page.setData({
-      'purchase.show': false
+      'purchase.item.specs': item.specs,
+      'purchase.specsIndex': index
+    })
+    /* 在localStorage中记录商品选择的属性 */
+    setSelectSpecs(item)
+  },
+
+  onImageTap: function(e){
+    let imageTop = -100
+    let imageLarge = this.page.data.purchase.imageLarge
+    let contentHeight = this.page.data.purchase.contentHeight
+    if (!imageLarge) {
+      if (contentHeight == Content_Height_With_Specs) {
+        imageTop = -180
+      } else {
+        imageTop = -360
+      }
+    }
+    this.page.setData({
+      'purchase.imageTop': imageTop,
+      'purchase.imageLarge': !imageLarge
     })
   },
 
-  onPurchaseConfirm: function (e) {
+  onNumberMinus: function (e) {
     let item = this.page.data.purchase.item
+    let specsIndex = this.page.data.purchase.specsIndex
+    let specs = item.specs[specsIndex]
+    if (!specs.num) specs.num = 0
+    if (specs.num > 0) specs.num--
+    if (specs.num < 0) specs.num = 0
+    item.num = 0
+    for (let i in item.specs) {
+      item.num += Number(item.specs[i].num)
+    }
     this.page.setData({
-      'purchase.show': false
-    })
-    setShopping(item)
-  },
-
-  onPurchaseImageTap: function(e){
-    let item = this.page.data.purchase.item
-    let image = item.images[0]
-    wx.previewImage({
-      urls: [image]
-    })
-  },
-
-  onPurchaseNumberMinus: function (e) {
-    let item = this.page.data.purchase.item
-    if (!item.num) item.num = 0
-    if (item.num > 0) item.num--
-    if (item.num < 0) item.num = 0
-    item.amount = Number(item.num * item.price).toFixed(2)
-    this.page.setData({
-      'purchase.item': item,
+      'purchase.item': item
     })
   },
 
-  onPurchaseNumberPlus: function (e) {
+  onNumberPlus: function (e) {
     let item = this.page.data.purchase.item
-    if (!item.num) item.num = 0
-    if (item.num < 9999) item.num = Number(item.num) + 1
-    item.amount = Number(item.num * item.price).toFixed(2)
+    let specsIndex = this.page.data.purchase.specsIndex
+    let specs = item.specs[specsIndex]
+    if (!specs.num) specs.num = 0
+    if (specs.num < 9999) specs.num = Number(specs.num) + 1
+    item.num = 0
+    for (let i in item.specs) {
+      item.num += Number(item.specs[i].num)
+    }
     this.page.setData({
-      'purchase.item': item,
+      'purchase.item': item
     })
   },
 
-  onPurchaseNumberInput: function (e) {
+  onNumberInput: function (e) {
     let item = this.page.data.purchase.item
-    item.num = e.detail.value
-    if (item.num < 0) item.num = 0
-    item.amount = Number(item.num * item.price).toFixed(2)
+    let specsIndex = this.page.data.purchase.specsIndex
+    let specs = item.specs[specsIndex]
+    specs.num = e.detail.value
+    if (specs.num < 0) specs.num = 0
+    item.num = 0
+    for (let i in item.specs) {
+      item.num += Number(item.specs[i].num)
+    }
     this.page.setData({
-      'purchase.item': item,
+      'purchase.item': item
     })
   },
 
-  onPurchaseMessageInput: function (e) {
+  onMessageInput: function (e) {
     let item = this.page.data.purchase.item
-    item.message = e.detail.value
+    let specsIndex = this.page.data.purchase.specsIndex
+    let specs = item.specs[specsIndex]
+    specs.message = e.detail.value
     this.page.setData({
-      'purchase.item': item,
+      'purchase.item': item
     })
   },
+
+  onCancel: function (e) {
+    this.page.setData({
+      'purchase.show': false,
+      'purchase.imageLarge': false,
+      'purchase.imageTop': 0,
+      'purchase.contentHeight': 0
+    })
+  },
+
+  onConfirm: function (e) {
+    let item = this.page.data.purchase.item
+    setShoppings(item)
+    setHistoryItems(item)
+    this.onPurchase && this.onPurchase(item)
+    this.onCancel()
+  }
 
 }
 
@@ -102,6 +119,7 @@ export class Purchase {
   constructor(options) {
     options = Object.assign({}, defaults, options)
     this.page = options.page
+    this.onPurchase = options.onPurchase
     for (let key in methods) {
       this[key] = methods[key].bind(this)
       this.page['purchase.' + key] = methods[key].bind(this)
@@ -112,11 +130,26 @@ export class Purchase {
   }
 
   show(item) {
-    let num = item.num ? item.num : 0
-    item.amount = Number(num * item.price).toFixed(2)
+    /* 根据是否是单品，决定弹出内容的高度 */
+    let contentHeight = Content_Height_Without_Specs
+    if (item.specs.length > 1) {
+      contentHeight = Content_Height_With_Specs
+    }
+
+    /* 根据以前的选择，决定当前选择的商品属性 */
+    let specsIndex = getSelectSpecs(item)
+    for (let i in item.specs) {
+      item.specs[i].active = false
+    }
+    item.specs[specsIndex].active = true
+
     this.page.setData({
-      'purchase.item': item,
       'purchase.show': true,
+      'purchase.imageTop': -100,
+      'purchase.imageLarge': false,
+      'purchase.item': item,
+      'purchase.specsIndex': specsIndex,
+      'purchase.contentHeight': contentHeight
     })
   }
 

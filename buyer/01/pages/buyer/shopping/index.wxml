@@ -4,15 +4,15 @@
 <view class="container">
 
   <view class="orders" wx:if="{{orders.length}}">
-    <block wx:for="{{orders}}" wx:key="" wx:for-item="order">
-      <view class="order" data-iid="{{order.iid}}" catchtap="onOrderTap">
+    <block wx:for="{{orders}}" wx:key="order.id" wx:for-item="order">
+      <view class="order" data-iid="{{order.iid}}" data-sid="{{order.sid}}" catchtap="onOrderTap">
         <view class="order-image">
           <image src="{{order.image + youImageMode_v2}}" mode="aspectFill" />
         </view>
-        <view class="order-text {{order.message ? 'withMessage' : ''}}">
-          <view class="order-text-title">{{order.title}}</view>
-          <view class="order-text-descs gray">{{order.descs || order.title + '(500克)'}}</view>
-          <view class="order-text-message gray">{{order.message}}</view>
+        <view class="order-text">
+          <view class="order-text-title">{{order.title}}<text wx:if="{{order.specs}}">-{{order.specs}}</text></view>
+          <view class="order-text-descs gray" wx:if="{{order.descs}}">{{order.descs}}</view>
+          <view class="order-text-message gray" wx:if="{{order.message}}">买家留言：{{order.message}}</view>
         </view>
         <view class="order-number">
           <view class="order-number-price">￥{{order.price}}</view>

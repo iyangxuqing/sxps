@@ -1,5 +1,7 @@
 import { Cate } from '../../../utils/cates.js'
 import { Item } from '../../../utils/items.js'
+import { getShoppings } from '../../../utils/shoppings.js'
+
 import { Cates } from '../../../template/cates/cates.js'
 import { Items } from '../../../template/items/items.js'
 import { Purchase } from '../../../template/purchase/purchase.js'
@@ -71,18 +73,7 @@ Page({
 
   onShoppingsUpdate: function () {
     let items = this.data.items.items
-    let shoppings = wx.getStorageSync('shoppings')
-    for (let i in items) {
-      items[i].num = 0
-      items[i].message = ''
-      for (let j in shoppings) {
-        if (items[i].id == shoppings[j].iid) {
-          items[i].num = shoppings[j].num
-          items[i].message = shoppings[j].message
-          break
-        }
-      }
-    }
+    getShoppings(items)
     this.setData({
       'items.items': items,
     })
@@ -105,6 +96,7 @@ Page({
     ]).then(function (res) {
       let cates = res[0]
       let items = res[1]
+      getShoppings(items)
       this.cates.update(cates)
       let cid = this.cates.getActiveCId()
       this.items.update(items, { cid })
@@ -129,7 +121,7 @@ Page({
     })
     this.purchase = new Purchase({
       page: this,
-      purchaseConfirm: this.onPurchaseConfirm
+      onPurchase: this.onPurchase
     })
     this.loadData()
   },

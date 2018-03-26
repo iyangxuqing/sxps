@@ -63,7 +63,6 @@ Page({
         ready: true
       })
     }.bind(this)).catch(function (res) {
-      console.log('1002', res)
       this.setData({
         'netfail.id': 1002,
         'netfail.show': true

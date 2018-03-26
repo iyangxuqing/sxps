@@ -8,14 +8,13 @@ function getItems(options = {}) {
       resolve(app.items)
     } else {
       http.get({
-        url: 'sxps_buyer/item.php?m=get',
-        data: { onShelf: 1 },
+        url: 'sxps2/buyer/_item.php?m=get'
       }).then(function (res) {
         let items = res.items
         for (let i in items) {
-          if (!items[i].images) items[i].images = '[]'
-          items[i].images = JSON.parse(items[i].images)
-          items[i].price = Number(items[i].price).toFixed(2)
+          for (let j in items[i].specs) {
+            items[i].specs[j].price = Number(items[i].specs[j].price).toFixed(2)
+          }
         }
         app.items = items
         resolve(items)

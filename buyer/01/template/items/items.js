@@ -25,9 +25,6 @@ export class Items {
     options = Object.assign({}, defaults, options)
     this.page = options.page
     this.itemTap = options.itemTap
-    this.page.setData({
-      'items.items': options.items
-    })
     for (let key in methods) {
       this[key] = methods[key].bind(this)
       this.page['items.' + key] = methods[key].bind(this)
@@ -37,51 +34,31 @@ export class Items {
     }
   }
 
-  update(items, fliter = {}) {
-    let cid = fliter.cid
-    let ids = fliter.ids
-    let searchWord = fliter.searchWord
-    let _items = []
-    if (cid) {
-      for (let i in items) {
-        if (items[i].cid == cid) {
-          _items.push(items[i])
-        }
+  update(items, filter = {}) {
+    let cid = filter.cid
+    let ids = filter.ids
+    let searchWord = filter.searchWord
+
+    let _items = items.filter((item) => {
+      if (cid) {
+        return item.cid == cid
       }
-    } else if (ids) {
-      for (let i in items) {
-        for (let j in ids) {
-          if (items[i].id == ids[j].id) {
-            _items.push(items[i])
-            break
-          }
-          if (items[i].id == ids[j].iid) {
-            items[i].num = ids[j].num
-            _items.push(items[i])
-            break
+      else if (ids) {
+        for (let i in ids) {
+          /* 常购清单 */
+          if (item.id == ids[i].id) {
+            return true
           }
         }
       }
-    } else if (searchWord) {
-      for (let i in items) {
-        if (items[i].title.indexOf(searchWord) > -1) {
-          _items.push(items[i])
-        }
+      else if (searchWord) {
+        return item.specs[0].title.indexOf(searchWord) >=0
       }
-    }
-    let shoppings = wx.getStorageSync('shoppings')
-    for (let i in _items) {
-      for (let j in shoppings) {
-        if (_items[i].id == shoppings[j].iid) {
-          _items[i].num = shoppings[j].num
-          _items[i].message = shoppings[j].message
-          break
-        }
-      }
-    }
+    })
+
     this.page.setData({
       'items.items': _items,
-      'items.scrollTop': 0,
+      'items.scrollTop': 0
     })
   }
 

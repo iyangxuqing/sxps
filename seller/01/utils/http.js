@@ -85,6 +85,7 @@ function cosUpload(options) {
     let source = options.source
     let extension = source.split('.').pop()
     let target = config.aid + '/' + options.target + '.' + extension
+    target = 'test/' + options.target + '.' + extension
     http.get({
       url: 'sxps_buyer/cos.php?m=signature',
       data: { filename: target },
